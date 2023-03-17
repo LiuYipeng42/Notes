@@ -256,7 +256,26 @@ select max(字段名) from 表名 group by 字段名1, 字段名2;
 **例：**
 
 ```
-DEPT表：+--------+------------+----------+| deptno | dname      | loc      |+--------+------------+----------+|     10 | ACCOUNTING | NEW YORK ||     20 | RESEARCH   | DALLAS   ||     30 | SALES      | CHICAGO  |+--------+------------+----------+EMP表：+--------+--------+| ename  | deptno |+--------+--------+| SMITH  |     20 || ALLEN  |     10 || WARD   |     30 || JONES  |     20 || MARTIN |     30 || BLAKE  |     30 || CLARK  |     10 |+--------+--------+
+DEPT表：
++--------+------------+----------+
+| deptno | dname      | loc      |
++--------+------------+----------+
+|     10 | ACCOUNTING | NEW YORK |
+|     20 | RESEARCH   | DALLAS   |
+|     30 | SALES      | CHICAGO  |
++--------+------------+----------+
+EMP表：
++--------+--------+
+| ename  | deptno |
++--------+--------+
+| SMITH  |     20 |
+| ALLEN  |     10 |
+| WARD   |     30 |
+| JONES  |     20 |
+| MARTIN |     30 |
+| BLAKE  |     30 |
+| CLARK  |     10 |
++--------+--------+
 ```
 
 &emsp;&emsp;在EMP表中按照deptno将每一个ename与DEPT中相应的dname对应。
@@ -268,7 +287,16 @@ select EMP.ename, DEPT.dname from EMP join DEPT;
 ```
 
 ```
-+--------+------------+| ename  | dname      |+--------+------------+| SMITH  | SALES      || SMITH  | RESEARCH   || SMITH  | ACCOUNTING || ALLEN  | SALES      || ALLEN  | RESEARCH   || ALLEN  | ACCOUNTING |	.	.	.21 rows in set (0.00 sec)
++--------+------------+
+| ename  | dname      |
++--------+------------+
+| SMITH  | SALES      |
+| SMITH  | RESEARCH   |
+| SMITH  | ACCOUNTING |
+| ALLEN  | SALES      |
+| ALLEN  | RESEARCH   |
+| ALLEN  | ACCOUNTING |
+.	.	.21 rows in set (0.00 sec)
 ```
 
 &emsp;&emsp;此语句会出现**笛卡尔积现象**，即所要查询的字段按照顺序遍历所有可能出现的情况，查询结果共有21行。
@@ -300,7 +328,28 @@ select e.ename, d.dname from EMP e join DEPT d on e.deptno = d.deptno;
 &emsp;&emsp;**例：**
 
 ```
-SALGRADE表+-------+-------+-------+  losal是最小值| grade | losal | hisal |  hisal是最小值+-------+-------+-------+|     1 |   700 |  1200 ||     2 |  1201 |  1400 ||     3 |  1401 |  2000 ||     4 |  2001 |  3000 ||     5 |  3001 |  9999 |+-------+-------+-------+EMP表：+--------+---------+| ename  | sal     |+--------+---------+| SMITH  |  800.00 || ALLEN  | 1600.00 || WARD   | 1250.00 || JONES  | 2975.00 || MARTIN | 1250.00 || BLAKE  | 2850.00 || CLARK  | 2450.00 |+--------+---------+
+SALGRADE表
++-------+-------+-------+  
+| grade | losal | hisal | losal是最小值 hisal是最小值
++-------+-------+-------+
+|     1 |   700 |  1200 |
+|     2 |  1201 |  1400 |
+|     3 |  1401 |  2000 |
+|     4 |  2001 |  3000 |
+|     5 |  3001 |  9999 |
++-------+-------+-------+
+EMP表：
++--------+---------+
+| ename  | sal     |
++--------+---------+
+| SMITH  |  800.00 |
+| ALLEN  | 1600.00 |
+| WARD   | 1250.00 |
+| JONES  | 2975.00 |
+| MARTIN | 1250.00 |
+| BLAKE  | 2850.00 |
+| CLARK  | 2450.00 |
++--------+---------+
 ```
 
 &emsp;&emsp;在EMP表中，对于每条记录的sal字段的数据，按照SALGRADE表的标准进行分类，即找到对应的grade。
@@ -318,7 +367,24 @@ select e.ename, e.sal from EMP e join SALGRADE s where e.sal between s.losal and
 **例：**
 
 ```
-+-------+--------+------+	empno：员工编号| empno | ename  | mgr  |	ename：员工姓名+-------+--------+------+	mgr：每一个员工领导的编号|  7369 | SMITH  | 7902 |		 |  7499 | ALLEN  | 7698 ||  7521 | WARD   | 7698 ||  7566 | JONES  | 7839 ||  7654 | MARTIN | 7698 ||  7698 | BLAKE  | 7839 ||  7782 | CLARK  | 7839 ||  7788 | SCOTT  | 7566 ||  7839 | KING   | NULL ||  7844 | TURNER | 7698 ||  7876 | ADAMS  | 7788 ||  7900 | JAMES  | 7698 ||  7902 | FORD   | 7566 ||  7934 | MILLER | 7782 |+-------+--------+------+
++-------+--------+------+   empno：员工编号
+| empno | ename  | mgr  |	ename：员工姓名
++-------+--------+------+	mgr：每一个员工领导的编号
+|  7369 | SMITH  | 7902 |		 
+|  7499 | ALLEN  | 7698 |
+|  7521 | WARD   | 7698 |
+|  7566 | JONES  | 7839 |
+|  7654 | MARTIN | 7698 |
+|  7698 | BLAKE  | 7839 |
+|  7782 | CLARK  | 7839 |
+|  7788 | SCOTT  | 7566 |
+|  7839 | KING   | NULL |
+|  7844 | TURNER | NULL |
+|  7876 | ADAMS  | 7788 |
+|  7900 | JAMES  | NULL |
+|  7902 | FORD   | 7566 |
+|  7934 | MILLER | 7782 |
++-------+--------+------+
 ```
 
 &emsp;&emsp;将每一个员工与其领导的名字对应
@@ -345,7 +411,7 @@ select e.ename as '员工名', m.ename as '领导名' from EMP e join EMP m on e
 
 &emsp;&emsp;**left outer join**：将两个表以**左外连接**的方式连接起来**左边**的表为**主表**，与内连接的inner可以省略一样，outer可省略
 
-**right outer join**：将两个表以**右外连接**的方式连接起来**右边**的表为**主表**，与内连接的inner可以省略一样，outer可省略
+​        **right outer join**：将两个表以**右外连接**的方式连接起来**右边**的表为**主表**，与内连接的inner可以省略一样，outer可省略
 
 左外连接有右外连接的写法，右外连接也会有对应的左外连接的写法。
 
@@ -356,7 +422,24 @@ select e.ename as '员工名', m.ename as '领导名' from EMP e join EMP m on e
 &emsp;&emsp;**例：**
 
 ```
-+-------+--------+------+	empno：员工编号| empno | ename  | mgr  |	ename：员工姓名+-------+--------+------+	mgr：每一个员工领导的编号|  7369 | SMITH  | 7902 |		 |  7499 | ALLEN  | 7698 ||  7521 | WARD   | 7698 ||  7566 | JONES  | 7839 ||  7654 | MARTIN | 7698 ||  7698 | BLAKE  | 7839 ||  7782 | CLARK  | 7839 ||  7788 | SCOTT  | 7566 ||  7839 | KING   | NULL ||  7844 | TURNER | 7698 ||  7876 | ADAMS  | 7788 ||  7900 | JAMES  | 7698 ||  7902 | FORD   | 7566 ||  7934 | MILLER | 7782 |+-------+--------+------+
++-------+--------+------+	empno：员工编号
+| empno | ename  | mgr  |	ename：员工姓名
++-------+--------+------+	mgr：每一个员工领导的编号
+|  7369 | SMITH  | 7902 |
+|  7499 | ALLEN  | 7698 |
+|  7521 | WARD   | 7698 |
+|  7566 | JONES  | 7839 |
+|  7654 | MARTIN | 7698 |
+|  7698 | BLAKE  | 7839 |
+|  7782 | CLARK  | 7839 |
+|  7788 | SCOTT  | 7566 |
+|  7839 | KING   | NULL |
+|  7844 | TURNER | 7698 |
+|  7876 | ADAMS  | 7788 |
+|  7900 | JAMES  | 7698 |
+|  7902 | FORD   | 7566 |
+|  7934 | MILLER | 7782 |
++-------+--------+------+
 ```
 
 &emsp;&emsp;将每一个员工与其领导的名字对应
@@ -472,12 +555,14 @@ select ... from ... limit length;
 ### 完整DQL语句
 
 ```mysql
-       select ... from ... where ... group by ... having ... order by ... limit ...执行顺序   5         1        2           3           4           6			  7
+       select ... from ... where ... group by ... having ... order by ... limit ...
+执行顺序   5         1        2           3           4           6			  7
 ```
 
 &emsp;&emsp;或
 
 ```mysql
-       select ... from ... join ... on ... group by ... having ... order by ... limit ...执行顺序   6         1        2       3         4           5			7			8
+       select ... from ... join ... on ... group by ... having ... order by ... limit ...
+执行顺序   6         1        2       3         4           5			7			8
 ```
 
